@@ -1,0 +1,13 @@
+.contenedor{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: bisque;
+}
+
+.botones{
+    display: flex;
+    padding: 50px;
+    gap: 20px;
+}
+

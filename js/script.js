@@ -16,67 +16,56 @@ Se muestra por pantalla el vencedor del encuentro
 
 */
 
-function getComputerChoice(){
-    let computerChoice = getRandomInt();
-    if (computerChoice == 1){
-        return "piedra"
-    } else if (computerChoice == 2) {
-        return "papel"
+
+function obtenerEnteroRandom(){
+    const num = Math.floor(Math.random() * 3) + 1;
+    if(num == 1) return "piedra";
+    if(num == 2) return "papel";
+    if(num == 3) return "tijeras";
+};
+
+function jugarRonda(eleccionHumano, obtenerEnteroRandom){
+    const eleccionComputador = obtenerEnteroRandom();
+    if (eleccionHumano == "piedra" && eleccionComputador == "papel") {
+        return "pierdes";
+    } else if (eleccionHumano == "papel" && eleccionComputador == "tijeras") {
+        return "pierdes";
+    } else if (eleccionHumano == "tijeras" && eleccionComputador == "piedra") {
+        return "pierdes";
+    } else if (eleccionHumano == eleccionComputador){
+        return "empate";
     } else {
-        return "tijeras"
+        return "ganas";
     }
 }
-function getRandomInt(){
-    return Math.floor(Math.random() * 3)
-}
+let puntosHumano = 0;
+let puntosComputadora = 0;
 
-function getHumanChoice(){
-    let humanChoice = prompt("¿Piedra, Papel o Tijeras? : ");
-    humanChoice = humanChoice.toLowerCase();
-    return humanChoice
-}
-function playRound(humanChoice, computerChoice){
-    if (humanChoice == "piedra" && computerChoice == "papel") {
-        console.log(`${humanChoice} pierde contra ${computerChoice}, tú pierdes :( `);
-        computerScore++;
-    } else if (humanChoice == "piedra" && computerChoice == "tijeras") {
-        console.log(`${humanChoice} gana contra ${computerChoice}, tú ganas =)`);
-        humanScore++;
-    } else if (humanChoice == "papel" && computerChoice == "piedra") {
-        console.log(`${humanChoice} gana contra ${computerChoice}, tú ganas =)`);
-        humanScore++;
-    } else if (humanChoice == "papel" && computerChoice == "tijeras"){
-        console.log(`${humanChoice} pierde contra ${computerChoice}, tú pierdes :( `);
-        computerScore++;
-    } else if (humanChoice == "tijeras" && computerChoice == "papel") {
-        console.log(`${humanChoice} gana contra ${computerChoice}, tú ganas =)`);
-        humanScore++;
-    } else if (humanChoice == "tijeras" && computerChoice == "piedra"){
-        console.log(`${humanChoice} pierde contra ${computerChoice}, tú pierdes :( `);
-        computerScore++;
-    } else {
-        console.log(`${humanChoice} contra ${computerChoice}, es un empate`);
-    }
-}
-function definirGanador(score1, score2){
-    if (score1 > score2){
-        console.log(`Humano: ${score1} > Computadora: ${score2}. El humano es el gananador. Felicidades!`);
-    } else if (score1 < score2){
-        console.log(`Humano: ${score1} < Computadora: ${score2}. La computadora es la gananadora. Weon malo!`);
-    } else { 
-        console.log(`Humano: ${score1} - Computadora: ${score2}. Es un empate!`)
-    }
-}
-let humanScore = 0;
-let computerScore = 0;
+const buttons = document.querySelectorAll("button");
 
-function playGame(){
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    definirGanador(humanScore, computerScore);
-}
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        const playerSelection = button.id.toLowerCase();
+        const resultado = jugarRonda(playerSelection,obtenerEnteroRandom);
+        const paraResultado = document.querySelector(".resultadoRonda");
+        if (resultado == "ganas") puntosHumano++;
+        if (resultado == "pierdes") puntosComputadora++;
+        paraResultado.textContent = `Resultado ronda: ${resultado}`;
+        paraResultado.previousSibling.textContent = `Humano: ${puntosHumano} || Computadora ${puntosComputadora}`;
+        if (puntosHumano == 5 || puntosComputadora == 5) {
+            if (puntosHumano == 5){
+                alert('HAS GANADO EL JUEGO!')
+            } else {
+                alert('LA COMPUTADORA GANA!')
+            }
+            puntosHumano = 0;
+            puntosComputadora = 0;
+            paraResultado.textContent = "";
+            paraResultado.previousSibling.textContent = ``;
+        }
+        
+    });
+});
 
-playGame();
+
+
